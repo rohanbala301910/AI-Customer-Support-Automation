@@ -64,14 +64,6 @@ Successfully tested the complete automation using sample customer inquiries.
 - Gmail successfully delivered the responses.
 - The workflow completed without requiring manual execution of individual nodes.
 
-## Limitations and Future Improvements
-
-- Add a verified company knowledge base for accurate pricing, services, and policies.
-- Add conditional routing to send complex inquiries directly to human support staff.
-- Add a customer support database to track inquiries and responses.
-- Improve error handling and failed-email notifications.
-- Add monitoring to evaluate response quality.
-
 ## Project Status
 
 **Working prototype — built, tested, and published in n8n.**
