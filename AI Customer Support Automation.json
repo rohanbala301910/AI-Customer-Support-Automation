@@ -1,0 +1,173 @@
+{
+  "name": "AI Customer Support Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "formId": "o9e9p1"
+      },
+      "type": "n8n-nodes-tallyforms.tallyTrigger",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "80c171f0-5b36-4255-8060-3f575ac02888",
+      "name": "Tally Trigger",
+      "webhookId": "85b38d88-0f77-40ff-807e-d2b7e20996cb",
+      "credentials": {
+        "tallyApi": {
+          "id": "eTxL0VQ9mPMlvJo9",
+          "name": "Tally account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "be6af227-51f9-444e-9200-a53034787689",
+              "name": "name",
+              "value": "={{ $json.question_E88pAA.value }}",
+              "type": "string"
+            },
+            {
+              "id": "9800ddd5-2ada-4796-ad17-d3cb0fb53e74",
+              "name": "email",
+              "value": "={{ $json.question_r22Xgp.value }}",
+              "type": "string"
+            },
+            {
+              "id": "09659fe3-a706-42c3-9bdb-6bd3123c2302",
+              "name": "category",
+              "value": "={{ $json.question_4PPZEd.value }}",
+              "type": "string"
+            },
+            {
+              "id": "54d716a3-dbf1-4313-a425-a9c509f5c41f",
+              "name": "question",
+              "value": "={{ $json.question_jGGKgY.value }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "affe1a63-a4af-40cf-b714-17459956061b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=You are a friendly customer support assistant.\n\nCustomer name: {{ $json.name }}\nInquiry category: {{ $json.category }}\nCustomer question: {{ $json.question }}\n\nWrite a short, professional, helpful email response to the customer.\n\nDo not invent company policies, prices, or information.\nIf you cannot answer the question, explain that a support representative will follow up.\n\nStart with a greeting using the customer's name.\nDo not include a subject line.\nDo not include placeholder signatures such as [Your Name] or [Your Company].\nEnd with \"Best regards, Customer Support Team\".\nUse clear paragraphs with appropriate spacing.\n\nReturn only the email response.\n\nDo not describe the company's products, services, achievements, or policies unless that information has been explicitly provided. If information is missing, politely explain that a support representative can help."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "f4864e28-fac8-44f8-b990-6bfb8d823f69",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields').item.json.email }}",
+        "subject": "Re: your Customer Support Inquiry",
+        "emailType": "text",
+        "message": "={{ $json.output[0].content[0].text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        816,
+        0
+      ],
+      "id": "53187aeb-ec61-4fe2-b66f-b836bb368f28",
+      "name": "Send a message",
+      "webhookId": "8e51c832-2e13-4d45-98db-a914355f37bc",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "GM3zNndolIvWbzY8",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Tally Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "365ab5a4-36a5-4c93-92bf-8903e35d5b73",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d841d06c98b76cde78d2535afd5bce1142f81f7bc6d5fd195cafcdc9612de278"
+  },
+  "nodeGroups": [],
+  "id": "wwuFpEIZoXPL2QkI",
+  "tags": []
+}
